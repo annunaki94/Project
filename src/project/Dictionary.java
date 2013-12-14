@@ -10,6 +10,22 @@ import java.util.ArrayList;
 
 public class Dictionary {
 
+    private ArrayList<Word> words;
+    
+    public double getAVGKeyStrokes(){
+        return 0.0;
+        /*Para la obtención de los KeyStrokes me he dado cuenta de una característica al usar un trie:
+        * La cantidad de KeyStrokes necesarios para escribir una palabra usando este sistema
+        * es igual a el número de "padres" de la palabra que tienen dos hijos y/o son palabras completas.
+        * Pienso que podemos tomar la sugerencia que hizo el profesor en una de las clases y marcar
+        * las palabras completas con el símbolo "$" al finalizar la misma
+        */
+    }    
+    
+    public Dictionary(){
+        this.words= new ArrayList<Word>();
+    }
+    
     public void addWord(String word) {
     }
 
@@ -34,10 +50,7 @@ public class Dictionary {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(new File("output.txt")));
             for (Dictionary d : dictionaries) {
-                double prom = 65551.0000;
-                
-                //prom calc
-                
+                double prom = d.getAVGKeyStrokes();
                 DecimalFormat df = new DecimalFormat("0.00");
                 writer.write(df.format(prom)+"\n");
                 System.out.println(df.format(prom));                
