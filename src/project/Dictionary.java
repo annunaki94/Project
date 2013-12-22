@@ -11,22 +11,34 @@ import java.util.ArrayList;
 public class Dictionary {
 
     private ArrayList<Word> words;
-    
-    public double getAVGKeyStrokes(){
-        return 0.0;
-        /*Para la obtención de los KeyStrokes me he dado cuenta de una característica al usar un trie:
-        * La cantidad de KeyStrokes necesarios para escribir una palabra usando este sistema
-        * es igual a el número de "padres" de la palabra que tienen dos hijos y/o son palabras completas.
-        * Pienso que podemos tomar la sugerencia que hizo el profesor en una de las clases y marcar
-        * las palabras completas con el símbolo "$" al finalizar la misma
-        */
-    }    
-    
-    public Dictionary(){
-        this.words= new ArrayList<Word>();
+    private int size;
+
+    public double getAVGKeyStrokes() {
+        double avg = getKSAmount(words);
+        return size != 0 ? avg /= size : 0;
     }
-    
+
+    private int getKSAmount(ArrayList<Word> list) {
+        if (list == null) {
+            return 0;
+        }
+        int ks = 0;
+        for (Word word : list) {
+            if (list.size() > 1 || (list.size() < 2 && word.getWord().endsWith("$"))) {
+                ks++;
+            }
+            ks += getKSAmount(word.getSubWords());
+        }
+        return ks;
+    }
+
+    public Dictionary() {
+        this.words = new ArrayList<Word>();
+        this.size = 0;
+    }
+
     public void addWord(String word) {
+        /////////////////////////////
     }
 
     public static void main(String[] args) {
@@ -52,8 +64,8 @@ public class Dictionary {
             for (Dictionary d : dictionaries) {
                 double prom = d.getAVGKeyStrokes();
                 DecimalFormat df = new DecimalFormat("0.00");
-                writer.write(df.format(prom)+"\n");
-                System.out.println(df.format(prom));                
+                writer.write(df.format(prom) + "\n");
+                System.out.println(df.format(prom));
             }
             writer.close();
         } catch (Exception ex) {
