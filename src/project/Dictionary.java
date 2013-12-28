@@ -10,37 +10,77 @@ import java.util.ArrayList;
 
 public class Dictionary {
 
-    private ArrayList<Word> words;
+    private int ks;
+    private Node root;
     private int size;
 
-    public double getAVGKeyStrokes() {
-        double avg = getKSAmount(words);
-        return size != 0 ? avg /= size : 0;
+    private double getAVGKeyStrokes() {
+        ks = 0;
+        calculateKSAmount(root, 0);
+        return size != 0 ? (double) ks / size : 0;
     }
 
-    private int getKSAmount(ArrayList<Word> list) {
-        if (list == null) {
-            return 0;
+    private void calculateKSAmount(Node node, int n) {
+        if (node == null) {
+            return;
         }
-        int ks = 0;
-        for (Word word : list) {
-            if (list.size() > 1 || (list.size() < 2 && word.getWord().endsWith("$"))) {
-                ks++;
+        if (node.marker) {
+            ks += n;            
+        }
+        if (node.children.size() > 1 || node.marker) {
+            n++;            
+        }
+        for (Node child : node.children) {
+            calculateKSAmount(child, n);
+        }
+    }
+    
+    public Dictionary(char c) {
+        root = new Node(c);
+        size = 0;
+    }
+    
+    public Dictionary(){
+        this(' ');
+    }
+    
+    public void addWord(String s) {
+        Node current = root;
+        if (s.length() == 0) {
+            current.marker = true;
+        } else {
+            for (int i = 0; i < s.length(); i++) {
+                Node child = current.subNode(s.charAt(i));
+                if (child != null) {
+                    current = child;
+                } else {
+                    current.children.add(new Node(s.charAt(i)));
+                    current = current.subNode(s.charAt(i));
+                }
+                if (i == s.length() - 1) {
+                    current.marker = true;
+                }
             }
-            ks += getKSAmount(word.getSubWords());
         }
-        return ks;
+        size++;
     }
-
-    public Dictionary() {
-        this.words = new ArrayList<Word>();
-        this.size = 0;
-    }
-
-    public void addWord(String word) {
-        /////////////////////////////
-    }
-
+    
+    public boolean search(String s) {
+        Node current = root;
+        for (int i = 0; i < s.length(); i++) {
+            Node child = current.subNode(s.charAt(i));
+            if (child != null) {
+                current = child;
+            } else {
+                return false;
+            }
+        }
+        if (current.marker) {
+            return true;
+        }
+        return false;
+    }    
+    
     public static void main(String[] args) {
         ArrayList<Dictionary> dictionaries = new ArrayList<Dictionary>();
         try {
@@ -64,8 +104,7 @@ public class Dictionary {
             for (Dictionary d : dictionaries) {
                 double prom = d.getAVGKeyStrokes();
                 DecimalFormat df = new DecimalFormat("0.00");
-                writer.write(df.format(prom) + "\n");
-                System.out.println(df.format(prom));
+                writer.write(df.format(prom) + "\n");                
             }
             writer.close();
         } catch (Exception ex) {
