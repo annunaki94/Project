@@ -16,7 +16,9 @@ public class Dictionary {
 
     private double getAVGKeyStrokes() {
         ks = 0;
-        calculateKSAmount(root, 0);
+        for(Node nod: root.children){
+            calculateKSAmount(nod, 1);
+        }        
         return size != 0 ? (double) ks / size : 0;
     }
 
