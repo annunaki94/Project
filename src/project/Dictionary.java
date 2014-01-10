@@ -27,7 +27,7 @@ public class Dictionary {
             return;
         }
         if (node.marker) {
-            ks += n;            
+            ks += n*node.appearances;            
         }
         if (node.children.size() > 1 || node.marker) {
             n++;            
@@ -61,6 +61,7 @@ public class Dictionary {
                 }
                 if (i == s.length() - 1) {
                     current.marker = true;
+                    current.appearances++;
                 }
             }
         }

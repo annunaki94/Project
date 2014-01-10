@@ -7,12 +7,14 @@ public class Node {
 
     char content;
     boolean marker;
+    int appearances;
     Collection<Node> children;
 
     public Node(char c) {
         content = c;
         marker = false;
         children = new LinkedList<Node>();
+        appearances=0;
     }
 
     public Node subNode(char c) {
